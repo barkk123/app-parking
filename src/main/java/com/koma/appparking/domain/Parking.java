@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -22,7 +23,11 @@ public class Parking {
 
     private Integer numberOfParkingSpots;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar")
     private ParkingType type;
+
+    private Boolean secured;
 
     @OneToOne
     @JoinColumn(name = "location_id", referencedColumnName = "id")
@@ -31,5 +36,20 @@ public class Parking {
     @OneToMany(mappedBy = "parking", cascade = CascadeType.ALL)
     private List<ParkingSpot> parkingSpots;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Parking parking = (Parking) o;
+        return Objects.equals(id, parking.id) &&
+                Objects.equals(name, parking.name) &&
+                Objects.equals(numberOfParkingSpots, parking.numberOfParkingSpots) &&
+                type == parking.type &&
+                Objects.equals(location, parking.location);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

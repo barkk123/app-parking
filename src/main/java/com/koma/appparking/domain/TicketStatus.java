@@ -1,5 +1,16 @@
 package com.koma.appparking.domain;
 
 public enum TicketStatus {
-    //TODO wymyslec czy zapłacone czy w trakcie
+    PAID("Zapłacone"),
+    PENDING("W trakcie płatności");
+
+    private final String description;
+
+    TicketStatus(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

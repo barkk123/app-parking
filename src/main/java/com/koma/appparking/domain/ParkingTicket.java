@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -19,21 +20,36 @@ public class ParkingTicket {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "parking_spot_id", nullable = false)
+    @JoinColumn(name = "parking_spot_id", referencedColumnName = "id", nullable = false)
     private ParkingSpot parkingSpot;
 
     @ManyToOne
-    @JoinColumn(name = "license_number", nullable = false)
+    @JoinColumn(name = "vehicle_license_number", referencedColumnName = "license_number", nullable = false)
     private Vehicle vehicle;
 
     @Enumerated(EnumType.STRING)
-    private TicketStatus status; // Możliwe wartości: WOLNE, ZAJĘTE
-
-    private LocalDateTime arriveTime;
-
+    @Column(columnDefinition = "varchar")
+    private TicketStatus status;
+    private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
 
     private BigDecimal fee;
-// metody equal i hashcode w każdej encji
-}
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ParkingTicket that = (ParkingTicket) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(parkingSpot, that.parkingSpot) &&
+                status == that.status &&
+                Objects.equals(arrivalTime, that.arrivalTime) &&
+                Objects.equals(departureTime, that.departureTime) &&
+                Objects.equals(fee, that.fee);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
