@@ -24,7 +24,7 @@ public class Parking {
     private Integer numberOfParkingSpots;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar")
+    @Column(columnDefinition = "varchar(32)")
     private ParkingType type;
 
     private Boolean secured;
