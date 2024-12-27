@@ -22,7 +22,7 @@ public class ParkingSpot {
     @Column(columnDefinition = "varchar")
     private ParkingSpotStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parking_id", referencedColumnName = "id")
     private Parking parking;
 

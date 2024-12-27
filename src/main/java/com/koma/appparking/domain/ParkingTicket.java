@@ -19,11 +19,11 @@ public class ParkingTicket {
     @Id
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parking_spot_id", referencedColumnName = "id", nullable = false)
     private ParkingSpot parkingSpot;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_license_number", referencedColumnName = "license_number", nullable = false)
     private Vehicle vehicle;
 
