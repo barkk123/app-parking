@@ -1,14 +1,14 @@
 INSERT INTO parking_location (id, street, building_number, city, zip_code)
 VALUES
-    (1, 'Main Street', '10A', 'New York', '10001'),
-    (2, 'Highway Avenue', '200B', 'Los Angeles', '90001'),
-    (3, 'Ocean Drive', '5C', 'Miami', '33101');
+    (1, 'Brzozowa', '25', 'Lublin', '20-123'),
+    (2, '3 Maja', '54', 'Opole Lubelskie', '24-123'),
+    (3, 'Szkolna', '18F', 'Poniatowa', '22-234');
 
 INSERT INTO parking (id, name, type, secured, number_of_parking_spots, location_id)
 VALUES
-    (1, 'Lubartowska', 'PUBLIC', true, 50, 1),
-    (2, 'Lwowska', 'PRIVATE', false, 200, 2),
-    (3, 'Cynamonowa', 'PUBLIC', false, 30, 3);
+    (1, 'Spadochroniarzy', 'PUBLIC', true, 50, 1),
+    (2, 'Kraczewicka', 'PRIVATE', false, 200, 2),
+    (3, 'Makowa', 'PUBLIC', false, 30, 3);
 
 INSERT INTO parking_spot (id, number, status, parking_id)
 VALUES
