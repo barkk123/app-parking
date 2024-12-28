@@ -1,10 +1,12 @@
 package com.koma.appparking.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +17,6 @@ import java.util.Objects;
 @Getter
 @Setter
 public class Parking {
-
     @Id
     private Long id;
 
@@ -24,28 +25,39 @@ public class Parking {
     private Integer numberOfParkingSpots;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(32)")
+    @Column(columnDefinition = "varchar")
     private ParkingType type;
 
     private Boolean secured;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private ParkingLocation location;
 
-    @OneToMany(mappedBy = "parking", cascade = CascadeType.ALL)
-    private List<ParkingSpot> parkingSpots;
+    @OneToMany(
+            mappedBy = "parking",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonManagedReference
+    private List<ParkingSpot> parkingSpots = new ArrayList<>();
+
+    public void addParkingSpot(ParkingSpot parkingSpot) {
+        parkingSpots.add(parkingSpot);
+        parkingSpot.setParking(this);
+    }
+
+    public void removeParkingSpot(ParkingSpot parkingSpot) {
+        parkingSpots.remove(parkingSpot);
+        parkingSpot.setParking(null);
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Parking parking = (Parking) o;
-        return Objects.equals(id, parking.id) &&
-                Objects.equals(name, parking.name) &&
-                Objects.equals(numberOfParkingSpots, parking.numberOfParkingSpots) &&
-                type == parking.type &&
-                Objects.equals(location, parking.location);
+        var parking = (Parking) o;
+        return Objects.equals(id, parking.id);
     }
 
     @Override

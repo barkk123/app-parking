@@ -1,6 +1,9 @@
 package com.koma.appparking.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +16,6 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 public class Vehicle {
-
     @Id
     @Column(name = "license_number")
     private String licenseNumber;
@@ -26,7 +28,7 @@ public class Vehicle {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vehicle vehicle = (Vehicle) o;
+        var vehicle = (Vehicle) o;
         return Objects.equals(licenseNumber, vehicle.licenseNumber);
     }
 
@@ -36,4 +38,3 @@ public class Vehicle {
     }
 
 }
-

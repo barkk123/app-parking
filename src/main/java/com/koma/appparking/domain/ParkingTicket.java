@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -15,7 +17,6 @@ import java.util.Objects;
 @Getter
 @Setter
 public class ParkingTicket {
-
     @Id
     private Long id;
 
@@ -39,13 +40,8 @@ public class ParkingTicket {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ParkingTicket that = (ParkingTicket) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(parkingSpot, that.parkingSpot) &&
-                status == that.status &&
-                Objects.equals(arrivalTime, that.arrivalTime) &&
-                Objects.equals(departureTime, that.departureTime) &&
-                Objects.equals(fee, that.fee);
+        var that = (ParkingTicket) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override

@@ -1,13 +1,12 @@
 package com.koma.appparking.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -27,19 +26,15 @@ public class ParkingLocation {
 
     private String zipCode;
 
-    @OneToOne(mappedBy = "location")
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     private Parking parking;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ParkingLocation that = (ParkingLocation) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(street, that.street) &&
-                Objects.equals(buildingNumber, that.buildingNumber) &&
-                Objects.equals(city, that.city) &&
-                Objects.equals(zipCode, that.zipCode);
+        var that = (ParkingLocation) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override

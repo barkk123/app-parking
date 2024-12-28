@@ -1,5 +1,6 @@
 package com.koma.appparking.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Table(name = "parking_spot")
 @Getter
 @Setter
-public class ParkingSpot {
+public class ParkingSpot{
     @Id
     private Long id;
 
@@ -24,17 +25,15 @@ public class ParkingSpot {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parking_id", referencedColumnName = "id")
+    @JsonBackReference
     private Parking parking;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ParkingSpot that = (ParkingSpot) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(number, that.number) &&
-                Objects.equals(status, that.status) &&
-                Objects.equals(parking, that.parking);
+        var that = (ParkingSpot) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override
