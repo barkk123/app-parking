@@ -1,23 +1,22 @@
 package com.koma.appparking.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.io.Serial;
-import java.io.Serializable;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "parking_ticket")
 @Getter
 @Setter
+@Builder
 public class ParkingTicket {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,7 +30,10 @@ public class ParkingTicket {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar")
     private TicketStatus status;
+
+    @NotNull
     private LocalDateTime arrivalTime;
+
     private LocalDateTime departureTime;
 
     private BigDecimal fee;

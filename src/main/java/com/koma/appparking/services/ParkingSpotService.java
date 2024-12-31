@@ -3,8 +3,9 @@ package com.koma.appparking.services;
 import com.koma.appparking.domain.ParkingSpot;
 import com.koma.appparking.domain.ParkingSpotStatus;
 import com.koma.appparking.repository.ParkingSpotRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,22 +18,22 @@ public class ParkingSpotService {
         this.parkingSpotRepository = parkingSpotRepository;
     }
 
-    // Pobierz wszystkie miejsca parkingowe
+    @Transactional(readOnly = true)
     public List<ParkingSpot> getAllSpots() {
         return parkingSpotRepository.findAll();
     }
 
-    // Pobierz miejsce parkingowe po ID
+    @Transactional(readOnly = true)
     public Optional<ParkingSpot> getSpotById(Long id) {
         return parkingSpotRepository.findById(id);
     }
 
-    // Utwórz nowe miejsce parkingowe
+    @Transactional
     public ParkingSpot createSpot(ParkingSpot spot) {
         return parkingSpotRepository.save(spot);
     }
 
-    // Zaktualizuj istniejące miejsce parkingowe
+    @Transactional
     public ParkingSpot updateSpot(Long id, ParkingSpot updatedSpot) {
         return parkingSpotRepository.findById(id)
                 .map(existingSpot -> {
@@ -41,25 +42,25 @@ public class ParkingSpotService {
                     existingSpot.setParking(updatedSpot.getParking());
                     return parkingSpotRepository.save(existingSpot);
                 })
-                .orElseThrow(() -> new IllegalArgumentException("Parking spot with ID " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Parking spot with ID " + id + " not found"));
     }
 
-    // Usuń miejsce parkingowe
+    @Transactional
     public void deleteSpot(Long id) {
         if (parkingSpotRepository.existsById(id)) {
             parkingSpotRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Parking spot with ID " + id + " not found");
+            throw new EntityNotFoundException("Parking spot with ID " + id + " not found");
         }
     }
 
-    // Zaktualizuj status miejsca parkingowego
+
     public ParkingSpot updateSpotStatus(Long id, ParkingSpotStatus status) {
         return parkingSpotRepository.findById(id)
                 .map(spot -> {
                     spot.setStatus(status);
                     return parkingSpotRepository.save(spot);
                 })
-                .orElseThrow(() -> new IllegalArgumentException("Parking spot with ID " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Parking spot with ID " + id + " not found"));
     }
 }

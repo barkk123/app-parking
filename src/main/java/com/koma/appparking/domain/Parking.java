@@ -2,6 +2,7 @@ package com.koma.appparking.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,16 +19,20 @@ import java.util.Objects;
 @Setter
 public class Parking {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String name;
 
+    @NotNull
     private Integer numberOfParkingSpots;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar")
     private ParkingType type;
 
+    @NotNull
     private Boolean secured;
 
     @OneToOne(fetch = FetchType.LAZY)

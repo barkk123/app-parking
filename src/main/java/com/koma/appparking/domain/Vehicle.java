@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +21,10 @@ public class Vehicle {
     @Column(name = "license_number")
     private String licenseNumber;
 
+    @NotNull
     private String mark;
 
+    @NotNull
     private String model;
 
     @Override

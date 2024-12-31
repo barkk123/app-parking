@@ -2,8 +2,9 @@ package com.koma.appparking.services;
 
 import com.koma.appparking.domain.ParkingLocation;
 import com.koma.appparking.repository.ParkingLocationRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,23 +17,23 @@ public class ParkingLocationService {
         this.parkingLocationRepository = parkingLocationRepository;
     }
 
-    // Pobierz wszystkie lokalizacje parkingowe
+    @Transactional(readOnly = true)
     public List<ParkingLocation> getAllLocations() {
         return parkingLocationRepository.findAll();
     }
 
-    // Pobierz lokalizację parkingową po ID
+    @Transactional(readOnly = true)
     public Optional<ParkingLocation> getLocationById(Long id) {
         return parkingLocationRepository.findById(id);
     }
 
-    // Utwórz nową lokalizację parkingową
+    @Transactional
     public ParkingLocation createLocation(ParkingLocation location) {
         return parkingLocationRepository.save(location);
     }
 
-    // Zaktualizuj istniejącą lokalizację parkingową
-    public ParkingLocation updateLocation(Long id, ParkingLocation updatedLocation) {
+    @Transactional
+    public ParkingLocation update(Long id, ParkingLocation updatedLocation) {
         return parkingLocationRepository.findById(id)
                 .map(existingLocation -> {
                     existingLocation.setStreet(updatedLocation.getStreet());
@@ -41,15 +42,15 @@ public class ParkingLocationService {
                     existingLocation.setZipCode(updatedLocation.getZipCode());
                     return parkingLocationRepository.save(existingLocation);
                 })
-                .orElseThrow(() -> new IllegalArgumentException("Parking location with ID " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Parking location with ID " + id + " not found"));
     }
 
-    // Usuń lokalizację parkingową
+    @Transactional
     public void deleteLocation(Long id) {
         if (parkingLocationRepository.existsById(id)) {
             parkingLocationRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Parking location with ID " + id + " not found");
+            throw new EntityNotFoundException("Parking location with ID " + id + " not found");
         }
     }
 }

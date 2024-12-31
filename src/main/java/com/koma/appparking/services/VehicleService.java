@@ -2,11 +2,13 @@ package com.koma.appparking.services;
 
 import com.koma.appparking.domain.Vehicle;
 import com.koma.appparking.repository.VehicleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
+@Transactional
 @Service
 public class VehicleService {
 
@@ -16,22 +18,21 @@ public class VehicleService {
         this.vehicleRepository = vehicleRepository;
     }
 
-    // Pobierz wszystkie pojazdy
+
+    @Transactional(readOnly = true)
     public List<Vehicle> getAllVehicles() {
         return vehicleRepository.findAll();
     }
 
-    // Pobierz pojazd po numerze rejestracyjnym
+    @Transactional(readOnly = true)
     public Optional<Vehicle> getVehicleByLicenseNumber(String licenseNumber) {
         return vehicleRepository.findById(licenseNumber);
     }
 
-    // Utwórz nowy pojazd
     public Vehicle createVehicle(Vehicle vehicle) {
         return vehicleRepository.save(vehicle);
     }
 
-    // Zaktualizuj istniejący pojazd
     public Vehicle updateVehicle(String licenseNumber, Vehicle updatedVehicle) {
         return vehicleRepository.findById(licenseNumber)
                 .map(existingVehicle -> {
@@ -39,15 +40,14 @@ public class VehicleService {
                     existingVehicle.setModel(updatedVehicle.getModel());
                     return vehicleRepository.save(existingVehicle);
                 })
-                .orElseThrow(() -> new IllegalArgumentException("Vehicle with license number " + licenseNumber + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle with license number " + licenseNumber + " not found"));
     }
 
-    // Usuń pojazd
     public void deleteVehicle(String licenseNumber) {
         if (vehicleRepository.existsById(licenseNumber)) {
             vehicleRepository.deleteById(licenseNumber);
         } else {
-            throw new IllegalArgumentException("Vehicle with license number " + licenseNumber + " not found");
+            throw new EntityNotFoundException("Vehicle with license number " + licenseNumber + " not found");
         }
     }
 }
