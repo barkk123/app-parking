@@ -24,12 +24,12 @@ class ParkingTicketController {
 
     @GetMapping
      ResponseEntity<List<ParkingTicket>> getAllTickets() {
-        return ResponseEntity.ok(parkingTicketService.getAllTickets());
+        return ResponseEntity.ok(parkingTicketService.get());
     }
 
     @GetMapping("/{id}")
      ResponseEntity<ParkingTicket> getTicketById(@PathVariable Long id) {
-        return parkingTicketService.getTicketById(id)
+        return parkingTicketService.get(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -41,7 +41,7 @@ class ParkingTicketController {
 
     @DeleteMapping("/{id}")
      ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
-        parkingTicketService.deleteTicket(id);
+        parkingTicketService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

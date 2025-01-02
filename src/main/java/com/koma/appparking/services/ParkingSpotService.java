@@ -19,22 +19,22 @@ public class ParkingSpotService {
     }
 
     @Transactional(readOnly = true)
-    public List<ParkingSpot> getAllSpots() {
+    public List<ParkingSpot> get() {
         return parkingSpotRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Optional<ParkingSpot> getSpotById(Long id) {
+    public Optional<ParkingSpot> get(Long id) {
         return parkingSpotRepository.findById(id);
     }
 
     @Transactional
-    public ParkingSpot createSpot(ParkingSpot spot) {
+    public ParkingSpot create(ParkingSpot spot) {
         return parkingSpotRepository.save(spot);
     }
 
     @Transactional
-    public ParkingSpot updateSpot(Long id, ParkingSpot updatedSpot) {
+    public ParkingSpot update(Long id, ParkingSpot updatedSpot) {
         return parkingSpotRepository.findById(id)
                 .map(existingSpot -> {
                     existingSpot.setNumber(updatedSpot.getNumber());
@@ -46,7 +46,7 @@ public class ParkingSpotService {
     }
 
     @Transactional
-    public void deleteSpot(Long id) {
+    public void delete(Long id) {
         if (parkingSpotRepository.existsById(id)) {
             parkingSpotRepository.deleteById(id);
         } else {
@@ -55,7 +55,7 @@ public class ParkingSpotService {
     }
 
 
-    public ParkingSpot updateSpotStatus(Long id, ParkingSpotStatus status) {
+    public ParkingSpot update(Long id, ParkingSpotStatus status) {
         return parkingSpotRepository.findById(id)
                 .map(spot -> {
                     spot.setStatus(status);

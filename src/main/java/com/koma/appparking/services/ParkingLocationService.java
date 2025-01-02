@@ -18,17 +18,17 @@ public class ParkingLocationService {
     }
 
     @Transactional(readOnly = true)
-    public List<ParkingLocation> getAllLocations() {
+    public List<ParkingLocation> get() {
         return parkingLocationRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Optional<ParkingLocation> getLocationById(Long id) {
+    public Optional<ParkingLocation> get(Long id) {
         return parkingLocationRepository.findById(id);
     }
 
     @Transactional
-    public ParkingLocation createLocation(ParkingLocation location) {
+    public ParkingLocation create(ParkingLocation location) {
         return parkingLocationRepository.save(location);
     }
 
@@ -46,7 +46,7 @@ public class ParkingLocationService {
     }
 
     @Transactional
-    public void deleteLocation(Long id) {
+    public void delete(Long id) {
         if (parkingLocationRepository.existsById(id)) {
             parkingLocationRepository.deleteById(id);
         } else {

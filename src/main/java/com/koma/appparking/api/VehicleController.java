@@ -22,29 +22,29 @@ class VehicleController {
 
     @GetMapping
     ResponseEntity<List<Vehicle>> getAllVehicles() {
-        return ResponseEntity.ok(vehicleService.getAllVehicles());
+        return ResponseEntity.ok(vehicleService.get());
     }
 
     @GetMapping("/{licenseNumber}")
     ResponseEntity<Vehicle> getVehicleByLicenseNumber(@PathVariable String licenseNumber) {
-        return vehicleService.getVehicleByLicenseNumber(licenseNumber)
+        return vehicleService.get(licenseNumber)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
-        return ResponseEntity.ok(vehicleService.createVehicle(vehicle));
+        return ResponseEntity.ok(vehicleService.create(vehicle));
     }
 
     @PutMapping("/{licenseNumber}")
     ResponseEntity<Vehicle> updateVehicle(@PathVariable String licenseNumber, @RequestBody Vehicle updatedVehicle) {
-        return ResponseEntity.ok(vehicleService.updateVehicle(licenseNumber, updatedVehicle));
+        return ResponseEntity.ok(vehicleService.update(licenseNumber, updatedVehicle));
     }
 
     @DeleteMapping("/{licenseNumber}")
     ResponseEntity<Void> deleteVehicle(@PathVariable String licenseNumber) {
-        vehicleService.deleteVehicle(licenseNumber);
+        vehicleService.delete(licenseNumber);
         return ResponseEntity.noContent().build();
     }
 }

@@ -34,7 +34,7 @@ create table if not exists vehicle
 
 create table if not exists parking_ticket
 (
-    id                     bigint primary key not null auto_increment,
+    id                     bigint unique primary key not null auto_increment,
     parking_spot_id        bigint             not null references parking_spot (id),
     vehicle_license_number varchar(8)         not null references vehicle (license_number),
     status                 varchar(32)        not null check (status in ('PAID', 'ACTIVE')),

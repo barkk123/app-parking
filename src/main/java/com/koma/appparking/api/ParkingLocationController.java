@@ -23,19 +23,19 @@ class ParkingLocationController {
 
     @GetMapping
     ResponseEntity<List<ParkingLocation>> getAllLocations() {
-        return ResponseEntity.ok(parkingLocationService.getAllLocations());
+        return ResponseEntity.ok(parkingLocationService.get());
     }
 
     @GetMapping("/{id}")
     ResponseEntity<ParkingLocation> getLocationById(@PathVariable Long id) {
-        return parkingLocationService.getLocationById(id)
+        return parkingLocationService.get(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     ResponseEntity<ParkingLocation> createLocation(@RequestBody ParkingLocation location) {
-        return ResponseEntity.ok(parkingLocationService.createLocation(location));
+        return ResponseEntity.ok(parkingLocationService.create(location));
     }
 
     @PutMapping("/{id}")
@@ -45,7 +45,7 @@ class ParkingLocationController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
-        parkingLocationService.deleteLocation(id);
+        parkingLocationService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -20,20 +20,20 @@ public class VehicleService {
 
 
     @Transactional(readOnly = true)
-    public List<Vehicle> getAllVehicles() {
+    public List<Vehicle> get() {
         return vehicleRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Optional<Vehicle> getVehicleByLicenseNumber(String licenseNumber) {
+    public Optional<Vehicle> get(String licenseNumber) {
         return vehicleRepository.findById(licenseNumber);
     }
 
-    public Vehicle createVehicle(Vehicle vehicle) {
+    public Vehicle create(Vehicle vehicle) {
         return vehicleRepository.save(vehicle);
     }
 
-    public Vehicle updateVehicle(String licenseNumber, Vehicle updatedVehicle) {
+    public Vehicle update(String licenseNumber, Vehicle updatedVehicle) {
         return vehicleRepository.findById(licenseNumber)
                 .map(existingVehicle -> {
                     existingVehicle.setMark(updatedVehicle.getMark());
@@ -43,7 +43,7 @@ public class VehicleService {
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle with license number " + licenseNumber + " not found"));
     }
 
-    public void deleteVehicle(String licenseNumber) {
+    public void delete(String licenseNumber) {
         if (vehicleRepository.existsById(licenseNumber)) {
             vehicleRepository.deleteById(licenseNumber);
         } else {

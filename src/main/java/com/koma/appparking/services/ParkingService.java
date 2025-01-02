@@ -13,7 +13,7 @@ public class ParkingService {
         this.parkingRepository = parkingRepository;
     }
     @Transactional(readOnly = true)
-    public Integer getFreeSpotsByParkingName(String parkingName) {
+    public Integer get(String parkingName) {
         return parkingRepository.findFreeSpotsByParkingName(parkingName);
     }
 }
