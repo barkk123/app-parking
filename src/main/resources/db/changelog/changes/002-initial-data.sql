@@ -23,6 +23,8 @@ INSERT INTO vehicle (license_number, mark, model)
 VALUES
     ('ABC1234', 'Toyota', 'Corolla'),
     ('XYZ5678', 'Honda', 'Civic'),
+    ('QWE1345', 'Opel', 'Corsa'),
+    ('POI0987', 'Audi', 'A4'),
     ('LMN8901', 'Ford', 'Focus');
 
 INSERT INTO parking_ticket ( parking_spot_id, vehicle_license_number, status, arrival_time, departure_time, fee)

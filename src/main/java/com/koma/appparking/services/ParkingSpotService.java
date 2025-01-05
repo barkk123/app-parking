@@ -6,6 +6,7 @@ import com.koma.appparking.repository.ParkingSpotRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -63,4 +64,20 @@ public class ParkingSpotService {
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Parking spot with ID " + id + " not found"));
     }
+
+    public void synchronizeParkingSpotsWithTickets() {
+        List<ParkingSpot> allSpots = parkingSpotRepository.findAll();
+
+        for (ParkingSpot spot : allSpots) {
+            if (spot.getStatus() == ParkingSpotStatus.OCCUPIED) {
+                Object parkingTicketRepository = new Object();
+                boolean hasActiveTicket = Boolean.parseBoolean(parkingTicketRepository.toString());
+                if (!hasActiveTicket) {
+                    spot.setStatus(ParkingSpotStatus.FREE);
+                    parkingSpotRepository.save(spot);
+                }
+            }
+        }
+    }
+
 }

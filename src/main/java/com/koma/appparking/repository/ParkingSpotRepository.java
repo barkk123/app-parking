@@ -2,6 +2,8 @@ package com.koma.appparking.repository;
 
 import com.koma.appparking.domain.ParkingSpot;
 import com.koma.appparking.domain.ParkingSpotStatus;
+import com.koma.appparking.domain.ParkingTicket;
+import com.koma.appparking.domain.TicketStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +19,11 @@ public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, Long> 
     List<ParkingSpot> findFreeParkingSpotsByParkingId(Long parkingId);
 
     Optional<ParkingSpot> findFirstByStatus(ParkingSpotStatus status);
+
+    @Repository
+    public interface ParkingTicketRepository extends JpaRepository<ParkingTicket, Long> {
+
+        boolean existsByParkingSpotAndStatus(ParkingSpot parkingSpot, TicketStatus status);
+    }
+
 }

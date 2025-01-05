@@ -11,11 +11,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 
 @Service
 @Transactional
@@ -24,7 +24,6 @@ public class ParkingTicketService {
     private final ParkingTicketRepository parkingTicketRepository;
     private final VehicleRepository vehicleRepository;
     private final ParkingSpotRepository parkingSpotRepository;
-
 
     public ParkingTicketService(ParkingSpotRepository parkingSpotRepository,
                                 VehicleRepository vehicleRepository,
@@ -48,28 +47,58 @@ public class ParkingTicketService {
 
     @Transactional
     public void delete(Long id) {
-        logger.warn("Deleting parking ticket with ID: {}", id);
         parkingTicketRepository.deleteById(id);
+        logger.info("Successfully deleted parking ticket by ID: {}", id);
     }
-
 
     @Transactional
     public ParkingTicket createParkingTicket(ParkingTicketCreateModel ticketModel) {
-        var newTicket = new ParkingTicket();
+
+        var vehicle = vehicleRepository.findByLicenseNumber(ticketModel.vehicleRegistrationNumber())
+                .orElseThrow(() -> new EntityNotFoundException("Pojazd o id nie istnieje: " + ticketModel.vehicleRegistrationNumber()));
+
+        List<ParkingTicket> activeTickets = parkingTicketRepository.findByVehicleAndStatus(vehicle, TicketStatus.ACTIVE);
+        if (!activeTickets.isEmpty()) {
+            throw new IllegalStateException("Pojazd już zajmuje miejsce parkingowe.");
+        }
 
         var freeSpot = parkingSpotRepository.findFirstByStatus(ParkingSpotStatus.FREE)
                 .orElseThrow(() -> new NoSuchElementException("Brak dostępnych wolnych miejsc parkingowych"));
 
-       var vehicle = vehicleRepository.findByLicenseNumber(ticketModel.vehicleRegistrationNumber())
-               .orElseThrow(()-> new EntityNotFoundException("Pojazd o id nie istnieje: " + ticketModel.vehicleRegistrationNumber()));
+        var newTicket = ParkingTicket.builder().vehicle(vehicle)
+                .parkingSpot(freeSpot)
+                .status(TicketStatus.ACTIVE)
+                .arrivalTime(LocalDateTime.now())
+                .build();
 
-        newTicket.setVehicle(vehicle);
-        newTicket.setParkingSpot(freeSpot);
+        freeSpot.setStatus(ParkingSpotStatus.OCCUPIED);
 
-        newTicket.setStatus(TicketStatus.ACTIVE);
-        newTicket.setArrivalTime(LocalDateTime.now());
-
+        logger.info("Successfully created parking ticket");
         return parkingTicketRepository.save(newTicket);
     }
+
+    @Transactional
+    public double payForParkingTicket(String licenseNumber, Long parkingSpotId) {
+        var ticket = parkingTicketRepository
+                .findByVehicle_LicenseNumberAndParkingSpot_IdAndStatus(licenseNumber, parkingSpotId, TicketStatus.ACTIVE)
+                .orElseThrow(() -> new NoSuchElementException("Brak aktywnego biletu dla podanego pojazdu i miejsca parkingowego"));
+
+        LocalDateTime now = LocalDateTime.now();
+        long hours = Duration.between(ticket.getArrivalTime(), now).toHours();
+        double ratePerHour = 5.0;
+        double totalCharge = hours * ratePerHour;
+
+        ticket.setStatus(TicketStatus.PAID);
+        ticket.setDepartureTime(now);
+        parkingTicketRepository.save(ticket);
+
+        ParkingSpot parkingSpot = ticket.getParkingSpot();
+        parkingSpot.setStatus(ParkingSpotStatus.FREE);
+        parkingSpotRepository.save(parkingSpot);
+
+        logger.info("Bilet opłacony. Kwota: {}, Rejestracja: {}, Miejsce: {}", totalCharge, licenseNumber, parkingSpotId);
+        return totalCharge;
+    }
+
+
 }
-//dodać sobie kontroler advice

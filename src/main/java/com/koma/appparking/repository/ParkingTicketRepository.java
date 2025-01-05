@@ -34,4 +34,15 @@ public interface ParkingTicketRepository extends JpaRepository<ParkingTicket, Lo
 
     List<ParkingTicket> findByArrivalTimeBeforeAndDepartureTimeAfter(LocalDateTime arrivalTime, LocalDateTime departureTime);
 
+    List<ParkingTicket> findByVehicleAndStatus(Vehicle vehicle, TicketStatus ticketStatus);
+
+    Optional<ParkingTicket> findByVehicle_LicenseNumberAndParkingSpot_IdAndStatus(String licenseNumber, Long parkingSpotId, TicketStatus ticketStatus);
+
+    @Query("SELECT pt FROM ParkingTicket pt WHERE pt.vehicle.licenseNumber = :licenseNumber AND pt.parkingSpot.id = :parkingSpotId AND pt.status = :status")
+    Optional<ParkingTicket> findActiveTicketByVehicleAndSpot(
+            @Param("licenseNumber") String licenseNumber,
+            @Param("parkingSpotId") Long parkingSpotId,
+            @Param("status") TicketStatus status);
+
+
 }
