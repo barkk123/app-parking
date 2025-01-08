@@ -14,7 +14,8 @@ create table if not exists parking
     type                    varchar(32) check (type in ('PUBLIC', 'PRIVATE')) not null,
     secured                 boolean default false,
     number_of_parking_spots integer                                           not null,
-    location_id             bigint                                            not null references parking_location (id)
+    location_id             bigint                                            not null references parking_location (id),
+    hourly_rate             numeric(6, 2)                  default                   null
     );
 
 create table if not exists parking_spot

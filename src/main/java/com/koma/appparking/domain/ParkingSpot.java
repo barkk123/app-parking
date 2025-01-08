@@ -14,7 +14,7 @@ import java.util.Objects;
 @Table(name = "parking_spot")
 @Getter
 @Setter
-public class ParkingSpot{
+public class ParkingSpot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

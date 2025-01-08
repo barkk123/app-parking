@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,6 +47,8 @@ public class Parking {
     )
     @JsonManagedReference
     private List<ParkingSpot> parkingSpots = new ArrayList<>();
+
+    private BigDecimal hourlyRate;
 
     public void addParkingSpot(ParkingSpot parkingSpot) {
         parkingSpots.add(parkingSpot);

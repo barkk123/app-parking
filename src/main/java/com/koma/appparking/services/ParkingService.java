@@ -12,6 +12,7 @@ public class ParkingService {
     public ParkingService(ParkingRepository parkingRepository) {
         this.parkingRepository = parkingRepository;
     }
+
     @Transactional(readOnly = true)
     public Integer get(String parkingName) {
         return parkingRepository.findFreeSpotsByParkingName(parkingName);

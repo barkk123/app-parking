@@ -4,11 +4,11 @@ VALUES
     ( '3 Maja', '54', 'Opole Lubelskie', '24-123'),
     ( 'Szkolna', '18F', 'Poniatowa', '22-234');
 
-INSERT INTO parking ( name, type, secured, number_of_parking_spots, location_id)
+INSERT INTO parking ( name, type, secured, number_of_parking_spots, location_id, hourly_rate)
 VALUES
-    ( 'Spadochroniarzy', 'PUBLIC', true, 50, 1),
-    ( 'Kraczewicka', 'PRIVATE', false, 200, 2),
-    ( 'Makowa', 'PUBLIC', false, 30, 3);
+    ( 'Spadochroniarzy', 'PUBLIC', true, 50, 1, null),
+    ( 'Kraczewicka', 'PRIVATE', false, 200, 2, null),
+    ( 'Makowa', 'PUBLIC', false, 30, 3,null);
 
 INSERT INTO parking_spot ( number, status, parking_id)
 VALUES

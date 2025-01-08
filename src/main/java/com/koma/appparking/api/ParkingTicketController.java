@@ -23,7 +23,7 @@ class ParkingTicketController {
     @NotNull
     private final ParkingTicketService parkingTicketService;
 
-     ParkingTicketController(ParkingTicketService parkingTicketService) {
+    ParkingTicketController(ParkingTicketService parkingTicketService) {
         this.parkingTicketService = parkingTicketService;
     }
 
@@ -35,8 +35,8 @@ class ParkingTicketController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping
-     ResponseEntity<List<ParkingTicket>> get() {
-        return ResponseEntity.ok(parkingTicketService.get());
+    ResponseEntity<List<ParkingTicket>> getAll() {
+        return ResponseEntity.ok(parkingTicketService.getAll());
     }
 
     @Operation(summary = "Get parking ticket by ID", description = "Retrieve a specific parking ticket by its ID.")
@@ -47,7 +47,7 @@ class ParkingTicketController {
             @ApiResponse(responseCode = "404", description = "Parking ticket not found", content = @Content)
     })
     @GetMapping("/{id}")
-     ResponseEntity<ParkingTicket> get(@PathVariable Long id) {
+    ResponseEntity<ParkingTicket> get(@PathVariable Long id) {
         return parkingTicketService.get(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -61,8 +61,8 @@ class ParkingTicketController {
             @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content)
     })
     @PostMapping
-     ResponseEntity<ParkingTicket> create(@RequestBody @Valid ParkingTicketCreateModel model) {
-        return ResponseEntity.ok(parkingTicketService.createParkingTicket(model));
+    ResponseEntity<ParkingTicket> create(@RequestBody @Valid ParkingTicketCreateModel model) {
+        return ResponseEntity.ok(parkingTicketService.create(model));
     }
 
     @Operation(summary = "Delete a parking ticket", description = "Delete an existing parking ticket by ID.")
@@ -86,30 +86,11 @@ class ParkingTicketController {
             @ApiResponse(responseCode = "404", description = "Active parking ticket not found"),
             @ApiResponse(responseCode = "400", description = "Invalid request parameters")
     })
-    @PatchMapping("/{parkingSpotId}/pay")
-    ResponseEntity<Double> payForParkingTicket(
-            @PathVariable Long parkingSpotId,
-            @RequestParam String licenseNumber) {
-        double totalCharge = parkingTicketService.payForParkingTicket(licenseNumber, parkingSpotId);
-        return ResponseEntity.ok(totalCharge);
-    }
-
-    @Operation(
-            summary = "Pay for a parking ticket (alternative endpoint)",
-            description = "Alternative endpoint to pay for an active parking ticket using query parameters for license number and parking spot ID. The parking spot will be released after payment."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully paid for the parking ticket",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Double.class))),
-            @ApiResponse(responseCode = "404", description = "Active parking ticket not found"),
-            @ApiResponse(responseCode = "400", description = "Invalid request parameters")
-    })
-    @PostMapping("/pay")
-    public ResponseEntity<Double> payForParkingTicket(
-            @RequestParam String licenseNumber,
-            @RequestParam Long parkingSpotId) {
-        double totalCharge = parkingTicketService.payForParkingTicket(licenseNumber, parkingSpotId);
-        return ResponseEntity.ok(totalCharge);
+    @PatchMapping("/pay")
+    ResponseEntity<ParkingTicketSummary> payForParkingTicket(
+            @RequestBody ParkingTicketPayModel model) {
+        var parkingTicketSummary = parkingTicketService.pay(model);
+        return ResponseEntity.ok(parkingTicketSummary);
     }
 
 }
