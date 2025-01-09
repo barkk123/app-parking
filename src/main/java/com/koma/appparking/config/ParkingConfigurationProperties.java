@@ -1,20 +1,16 @@
 package com.koma.appparking.config;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
 
 @Configuration
-@ConfigurationProperties(prefix = "parking")
+@ConfigurationProperties(prefix = "parking.default")
+@Getter
+@Setter
 public class ParkingConfigurationProperties {
-    private BigDecimal hourlyRate = BigDecimal.valueOf(4.00);
-
-    public BigDecimal getHourlyRate() {
-        return hourlyRate;
-    }
-
-    public void setHourlyRate(BigDecimal hourlyRate) {
-        this.hourlyRate = hourlyRate;
-    }
+    private BigDecimal hourlyRate;
 }

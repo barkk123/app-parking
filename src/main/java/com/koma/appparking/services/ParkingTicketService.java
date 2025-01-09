@@ -9,14 +9,14 @@ import com.koma.appparking.domain.TicketStatus;
 import com.koma.appparking.repository.ParkingSpotRepository;
 import com.koma.appparking.repository.ParkingTicketRepository;
 import com.koma.appparking.repository.VehicleRepository;
-import com.koma.appparking.services.common.ChargeFormatter;
+import com.koma.appparking.services.common.FeeFormatter;
+import com.koma.appparking.services.common.ParkingTimeFormatter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,8 +30,7 @@ public class ParkingTicketService {
     private final ParkingTicketRepository parkingTicketRepository;
     private final VehicleRepository vehicleRepository;
     private final ParkingSpotRepository parkingSpotRepository;
-    private final ParkingTicketPaymentService parkingTicketPaymentService;
-    private final ChargeFormatter chargeFormatter;
+    private final ParkingTicketFeeService parkingTicketFeeService;
 
     @Transactional(readOnly = true)
     public List<ParkingTicket> getAll() {
@@ -81,19 +80,17 @@ public class ParkingTicketService {
                 .orElseThrow(() -> new NoSuchElementException("No active ticket for the given vehicle and parking spot."));
 
         ticket.setDepartureTime(LocalDateTime.now());
-        var totalFee = parkingTicketPaymentService.calculateTicketSummary(ticket);
+        var totalFee = parkingTicketFeeService.calculateTotalFee(ticket);
+
         ticket.setFee(totalFee);
         ticket.setStatus(TicketStatus.PAID);
-
         var parkingSpot = ticket.getParkingSpot();
         parkingSpot.setStatus(ParkingSpotStatus.FREE);
 
-        String formattedTotalFee = chargeFormatter.formatToPLN(totalFee);
+        log.info("Successfully paid ticket for vehicle: {}", ticket.getVehicle().getLicenseNumber());
 
-        return new ParkingTicketSummary(totalFee, formattedTotalFee);
-    }
+        return new ParkingTicketSummary(FeeFormatter.format(ticket.getFee()),
+                ParkingTimeFormatter.format(ticket.getArrivalTime(), ticket.getDepartureTime()));
+    }//logi na serwisach
 
-    private String formatFee(BigDecimal fee) {
-        return fee.setScale(2, BigDecimal.ROUND_HALF_UP) + " PLN";
-    }
 }

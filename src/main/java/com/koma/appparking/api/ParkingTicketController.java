@@ -46,6 +46,7 @@ class ParkingTicketController {
                             schema = @Schema(implementation = ParkingTicket.class))),
             @ApiResponse(responseCode = "404", description = "Parking ticket not found", content = @Content)
     })
+
     @GetMapping("/{id}")
     ResponseEntity<ParkingTicket> get(@PathVariable Long id) {
         return parkingTicketService.get(id)
@@ -87,10 +88,10 @@ class ParkingTicketController {
             @ApiResponse(responseCode = "400", description = "Invalid request parameters")
     })
     @PatchMapping("/pay")
-    ResponseEntity<ParkingTicketSummary> payForParkingTicket(
-            @RequestBody ParkingTicketPayModel model) {
+    ResponseEntity<ParkingTicketSummary> payForParkingTicket(@RequestBody @Valid ParkingTicketPayModel model) {
         var parkingTicketSummary = parkingTicketService.pay(model);
         return ResponseEntity.ok(parkingTicketSummary);
+
     }
 
 }
