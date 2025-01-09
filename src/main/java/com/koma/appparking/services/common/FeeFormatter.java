@@ -1,11 +1,11 @@
 package com.koma.appparking.services.common;
 
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-@Component
+@UtilityClass
 public class FeeFormatter {
 
     public static String format(BigDecimal amount) {

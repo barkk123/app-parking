@@ -34,16 +34,16 @@ class ParkingTicketControllerAdvice {
 
     @ExceptionHandler(IllegalStateException.class)
     protected ResponseEntity<Object> handleIllegalStateException(IllegalStateException ex) {
-        return ResponseEntity.badRequest().body("Błąd: " + ex.getMessage());
+        return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex) {
-        return ResponseEntity.status(404).body("Nie znaleziono: " + ex.getMessage());
+        return ResponseEntity.status(404).body("Not found: " + ex.getMessage());
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     protected ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex) {
-        return ResponseEntity.status(404).body("Brak dostępnych zasobów: " + ex.getMessage());
+        return ResponseEntity.status(404).body("Resources not available: " + ex.getMessage());
     }
 }

@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,6 @@ import java.util.List;
 @Validated
 class ParkingTicketController {
 
-    @NotNull
     private final ParkingTicketService parkingTicketService;
 
     ParkingTicketController(ParkingTicketService parkingTicketService) {
@@ -48,7 +46,7 @@ class ParkingTicketController {
     })
 
     @GetMapping("/{id}")
-    ResponseEntity<ParkingTicket> get(@PathVariable Long id) {
+    ResponseEntity<ParkingTicket> getAll(@PathVariable Long id) {
         return parkingTicketService.get(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

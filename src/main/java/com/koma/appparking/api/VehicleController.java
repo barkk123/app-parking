@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ import java.util.List;
 @RequestMapping("/parking/vehicles")
 class VehicleController {
 
-    @NotNull
     private final VehicleService vehicleService;
 
     VehicleController(VehicleService vehicleService) {
@@ -32,7 +30,7 @@ class VehicleController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping
-    ResponseEntity<List<Vehicle>> get() {
+    ResponseEntity<List<Vehicle>> getAll() {
         return ResponseEntity.ok(vehicleService.get());
     }
 
@@ -44,7 +42,7 @@ class VehicleController {
             @ApiResponse(responseCode = "404", description = "Vehicle not found", content = @Content)
     })
     @GetMapping("/{licenseNumber}")
-    ResponseEntity<Vehicle> get(@PathVariable String licenseNumber) {
+    ResponseEntity<Vehicle> getAll(@PathVariable String licenseNumber) {
         return vehicleService.get(licenseNumber)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

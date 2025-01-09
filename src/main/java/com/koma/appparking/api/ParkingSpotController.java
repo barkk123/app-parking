@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,6 @@ import java.util.List;
 @RequestMapping("/parking/parking-spots")
 class ParkingSpotController {
 
-    @NotNull
     private final ParkingSpotService parkingSpotService;
 
     ParkingSpotController(ParkingSpotService parkingSpotService) {
@@ -34,7 +32,7 @@ class ParkingSpotController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping
-    ResponseEntity<List<ParkingSpot>> get() {
+    ResponseEntity<List<ParkingSpot>> getAll() {
         return ResponseEntity.ok(parkingSpotService.get());
     }
 
@@ -46,7 +44,7 @@ class ParkingSpotController {
             @ApiResponse(responseCode = "404", description = "Parking spot not found", content = @Content)
     })
     @GetMapping("/{id}")
-    ResponseEntity<ParkingSpot> get(@PathVariable Long id) {
+    ResponseEntity<ParkingSpot> getAll(@PathVariable Long id) {
         return parkingSpotService.get(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

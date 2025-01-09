@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class ParkingController {
 
-    @NotNull
     private final ParkingService parkingService;
 
     ParkingController(ParkingService parkingService) {
@@ -32,10 +30,10 @@ class ParkingController {
     })
 
     @GetMapping("/parking/free-spots")
-    ResponseEntity<Integer> getNumberOfFreeSpotsByParkingName(
+    ResponseEntity<Integer>  getNumberOfFreeSpotsByParkingName(
             @Parameter(description = "The name of the parking lot", required = true, example = "Main Parking")
             @RequestParam String parkingName) {
-        int freeSpots = parkingService.get(parkingName);
+        int freeSpots = parkingService.getNumberOfFreeSpotsByParkingName(parkingName);
         return ResponseEntity.ok(freeSpots);
     }
 }

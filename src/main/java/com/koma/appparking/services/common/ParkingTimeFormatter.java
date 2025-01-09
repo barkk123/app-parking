@@ -1,16 +1,12 @@
 package com.koma.appparking.services.common;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Component
-@Getter
-@Setter
+@UtilityClass
 public class ParkingTimeFormatter {
 
     public static String format(LocalDateTime start, LocalDateTime end) {
@@ -21,16 +17,16 @@ public class ParkingTimeFormatter {
         int totalMinutes = (int) duration.toMinutes();
 
         if (totalMinutes == 0) {
-            return "0m";
+            return "0 m";
         }
 
         int hours = totalMinutes / 60;
         int minutes = totalMinutes % 60;
 
         if (hours > 0) {
-            return String.format("%dh %dmin", hours, minutes);
+            return String.format("%d h %d min", hours, minutes);
         } else {
-            return String.format("%dmin", minutes);
+            return String.format("%d min", minutes);
         }
     }
 

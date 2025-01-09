@@ -55,7 +55,6 @@ public class ParkingSpotService {
         }
     }
 
-
     public ParkingSpot update(Long id, ParkingSpotStatus status) {
         return parkingSpotRepository.findById(id)
                 .map(spot -> {
@@ -63,21 +62,6 @@ public class ParkingSpotService {
                     return parkingSpotRepository.save(spot);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Parking spot with ID " + id + " not found"));
-    }
-
-    public void synchronizeParkingSpotsWithTickets() {
-        List<ParkingSpot> allSpots = parkingSpotRepository.findAll();
-
-        for (ParkingSpot spot : allSpots) {
-            if (spot.getStatus() == ParkingSpotStatus.OCCUPIED) {
-                Object parkingTicketRepository = new Object();
-                boolean hasActiveTicket = Boolean.parseBoolean(parkingTicketRepository.toString());
-                if (!hasActiveTicket) {
-                    spot.setStatus(ParkingSpotStatus.FREE);
-                    parkingSpotRepository.save(spot);
-                }
-            }
-        }
     }
 
 }

@@ -26,7 +26,7 @@ class ParkingLocationController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of parking locations")
     })
     @GetMapping
-    ResponseEntity<List<ParkingLocation>> get() {
+    ResponseEntity<List<ParkingLocation>> getAll() {
         return ResponseEntity.ok(parkingLocationService.get());
     }
 
@@ -36,7 +36,7 @@ class ParkingLocationController {
             @ApiResponse(responseCode = "404", description = "Parking location not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<ParkingLocation> get(
+    ResponseEntity<ParkingLocation> getAll(
             @Parameter(description = "ID of the parking location", required = true, example = "1")
             @PathVariable Long id) {
         return parkingLocationService.get(id)
