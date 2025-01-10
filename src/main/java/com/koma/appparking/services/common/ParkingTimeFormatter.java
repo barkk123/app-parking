@@ -17,7 +17,7 @@ public class ParkingTimeFormatter {
         int totalMinutes = (int) duration.toMinutes();
 
         if (totalMinutes == 0) {
-            return "0 m";
+            return "0 min";
         }
 
         int hours = totalMinutes / 60;

@@ -13,10 +13,14 @@ import java.time.Duration;
 @RequiredArgsConstructor
 @Slf4j
 public class ParkingTicketFeeService {
+
     private final ParkingConfigurationProperties parkingConfigurationProperties;
 
     public BigDecimal calculateTotalFee(ParkingTicket ticket) {
+        log.info("Calculating total fee for parking ticket with ID: {}", ticket.getId());
+
         if (ticket.getArrivalTime() == null || ticket.getDepartureTime() == null) {
+            log.error("Arrival and departure times are not set for ticket ID: {}", ticket.getId());
             throw new IllegalArgumentException("Arrival and departure times must be set to calculate the summary.");
         }
 
@@ -24,13 +28,18 @@ public class ParkingTicketFeeService {
         var departureTime = ticket.getDepartureTime();
         var parkingDuration = Duration.between(arrivalTime, departureTime);
 
+        log.debug("Parking duration for ticket ID {}: {} minutes", ticket.getId(), parkingDuration.toMinutes());
+
         var hourlyRate = ticket.getParkingSpot().getParking().getHourlyRate();
 
         if (hourlyRate == null) {
-            return BigDecimal.valueOf(Math.ceil(parkingDuration.toMinutes() / 60.0)).multiply(parkingConfigurationProperties.getHourlyRate());
+            log.warn("Hourly rate is not defined for the parking spot in ticket ID: {}. Using default hourly rate.", ticket.getId());
+            hourlyRate = parkingConfigurationProperties.getHourlyRate();
         }
 
-        return BigDecimal.valueOf(Math.ceil(parkingDuration.toMinutes() / 60.0)).multiply(hourlyRate);
-    }
+        var totalFee = BigDecimal.valueOf(Math.ceil(parkingDuration.toMinutes() / 60.0)).multiply(hourlyRate);
+        log.info("Total fee for ticket ID {}: {}", ticket.getId(), totalFee);
 
+        return totalFee;
+    }
 }

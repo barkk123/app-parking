@@ -91,6 +91,6 @@ public class ParkingTicketService {
 
         return new ParkingTicketSummary(FeeFormatter.format(ticket.getFee()),
                 ParkingTimeFormatter.format(ticket.getArrivalTime(), ticket.getDepartureTime()));
-    }//logi na serwisach
+    }
 
 }

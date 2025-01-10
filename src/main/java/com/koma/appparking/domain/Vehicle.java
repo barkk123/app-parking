@@ -24,7 +24,6 @@ public class Vehicle {
     @NotNull
     private String mark;
 
-    @NotNull
     private String model;
 
     @Override
