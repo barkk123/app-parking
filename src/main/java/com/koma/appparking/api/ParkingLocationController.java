@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,7 +52,7 @@ class ParkingLocationController {
     @PostMapping
     ResponseEntity<ParkingLocation> create(
             @Parameter(description = "Details of the parking location to be created", required = true)
-            @RequestBody ParkingLocation location) {
+           @Valid @RequestBody ParkingLocation location) {
         return ResponseEntity.ok(parkingLocationService.create(location));
     }
 

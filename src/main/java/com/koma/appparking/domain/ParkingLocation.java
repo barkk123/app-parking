@@ -1,5 +1,6 @@
 package com.koma.appparking.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class ParkingLocation {
     @NotNull
     private String zipCode;
 
+    @JsonBackReference
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     private Parking parking;
 
